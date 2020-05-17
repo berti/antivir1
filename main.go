@@ -13,6 +13,7 @@ import (
 const VirusMarkOffset int = 3
 const VirusMarkEndOffset int = 5
 const VirusGenerationOffset int = 5
+const OriginalCodeOffset int = 0x34f
 
 const VirusNotFound int = -1
 
@@ -40,6 +41,28 @@ func isInfected(path string, info os.FileInfo) (int, error) {
 	return fileGeneration, nil
 }
 
+func min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
+func removeVirus(path string, info os.FileInfo) error {
+	content, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	offset := min(OriginalCodeOffset, int(info.Size()))
+	originalCode := content[offset:]
+	ioutil.WriteFile(path, originalCode, info.Mode())
+
+	fmt.Println("Virus removed")
+
+	return nil
+}
+
 func createFileProcessor(remove bool) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		if isComFile(path, info) {
@@ -48,8 +71,7 @@ func createFileProcessor(remove bool) filepath.WalkFunc {
 				return err
 			}
 			if gen != VirusNotFound && remove {
-				fmt.Println("Let's remove the virus")
-				return nil
+				return removeVirus(path, info)
 			}
 		}
 		return nil
