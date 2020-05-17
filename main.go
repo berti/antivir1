@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -44,8 +45,12 @@ func processFile(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
-func findViruses(root string) {
+func findViruses(root string, remove bool) {
 	fmt.Printf("Finding viruses in %s\n", root)
+	if remove {
+		fmt.Println("Found viruses will be removed")
+	}
+
 	err := filepath.Walk(root, processFile)
 	if err != nil {
 		panic(err)
@@ -53,11 +58,10 @@ func findViruses(root string) {
 }
 
 func main() {
-	var root string = "."
+	pathPtr := flag.String("p", ".", "path to scan")
+	removePtr := flag.Bool("r", false, "remove virus payload from infected files")
 
-	if len(os.Args) > 1 {
-		root = os.Args[1]
-	}
+	flag.Parse()
 
-	findViruses(root)
+	findViruses(*pathPtr, *removePtr)
 }
