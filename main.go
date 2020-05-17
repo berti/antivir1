@@ -11,6 +11,7 @@ import (
 
 const VirusMarkOffset int = 3
 const VirusMarkEndOffset int = 5
+const VirusGenerationOffset int = 5
 
 func isComFile(path string, info os.FileInfo) bool {
 	return !info.IsDir() && strings.EqualFold(filepath.Ext(path), ".com")
@@ -25,9 +26,13 @@ func isInfected(path string, info os.FileInfo) error {
 	}
 
 	fileMark := content[VirusMarkOffset:VirusMarkEndOffset]
-	if bytes.Equal(virusMark, fileMark) {
-		fmt.Printf("%s is infected!\n", path)
+	if !bytes.Equal(virusMark, fileMark) {
+		// Not infected
+		return nil
 	}
+
+	fileGeneration := int(content[VirusGenerationOffset])
+	fmt.Printf("Infected file found: %s, generation %d\n", path, fileGeneration)
 
 	return nil
 }
