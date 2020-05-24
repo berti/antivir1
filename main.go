@@ -63,31 +63,46 @@ func removeVirus(path string, info os.FileInfo) error {
 	return nil
 }
 
-func createFileProcessor(remove bool) filepath.WalkFunc {
-	return func(path string, info os.FileInfo, err error) error {
+func find(root string) []string {
+	fmt.Printf("Finding viruses in %s\n", root)
+
+	var infectedFiles []string
+
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if isComFile(path, info) {
 			gen, err := isInfected(path, info)
 			if err != nil {
 				return err
 			}
-			if gen != VirusNotFound && remove {
-				return removeVirus(path, info)
+			if gen != VirusNotFound {
+				infectedFiles = append(infectedFiles, path)
 			}
 		}
 		return nil
-	}
-}
+	})
 
-func findViruses(root string, remove bool) {
-	fmt.Printf("Finding viruses in %s\n", root)
-	if remove {
-		fmt.Println("Found viruses will be removed")
-	}
-
-	processFile := createFileProcessor(remove)
-	err := filepath.Walk(root, processFile)
 	if err != nil {
 		panic(err)
+	}
+
+	return infectedFiles
+}
+
+func remove(files []string) {
+	fmt.Println("Removing found viruses")
+
+	for _, file := range files {
+		fileInfo, err := os.Lstat(file)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error while getting file info: %s", file)
+			continue
+		}
+
+		err = removeVirus(file, fileInfo)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error while removing virus: %s", file)
+			continue
+		}
 	}
 }
 
@@ -97,5 +112,8 @@ func main() {
 
 	flag.Parse()
 
-	findViruses(*pathPtr, *removePtr)
+	infectedFiles := find(*pathPtr)
+	if *removePtr {
+		remove(infectedFiles)
+	}
 }
