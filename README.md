@@ -5,4 +5,23 @@
 
 This is an antivirus developed for [Curso Malware](http://www.titulacionespropias.uma.es/informacion_curso.php?id_curso=6903144).
 
-Check NOTES.md for notes on the behavior of the virus.
+## Usage
+
+```
+antivirus [-p path] [-r]
+```
+
+Options:
+
+| Option | Description | Default |
+| - | - | - |
+| `-p path` | Path where to look for files | `.` |
+| `-r` | Remove virus from infected files | |
+
+## Detected virus
+
+Check NOTES.md for notes on the behavior of the detected virus.
+
+## License
+
+See `LICENSE`.
