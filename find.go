@@ -48,10 +48,7 @@ func find(root string) []string {
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if isComFile(path, info) {
 			gen, err := isInfected(path, info)
-			if err != nil {
-				return err
-			}
-			if gen != virusNotFound {
+			if err == nil && gen != virusNotFound {
 				infectedFiles = append(infectedFiles, path)
 			}
 		}
