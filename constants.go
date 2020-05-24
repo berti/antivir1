@@ -1,8 +1,8 @@
 package main
 
-const VirusMarkOffset int = 3
-const VirusMarkEndOffset int = 5
-const VirusGenerationOffset int = 5
-const OriginalCodeOffset int = 0x34f
+const virusMarkOffset int = 3
+const virusMarkEndOffset int = 5
+const virusGenerationOffset int = 5
+const originalCodeOffset int = 0x34f
 
-const VirusNotFound int = -1
+const virusNotFound int = -1

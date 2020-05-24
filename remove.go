@@ -19,7 +19,7 @@ func removeVirus(path string, info os.FileInfo) error {
 		return err
 	}
 
-	offset := min(OriginalCodeOffset, int(info.Size()))
+	offset := min(originalCodeOffset, int(info.Size()))
 	originalCode := content[offset:]
 	ioutil.WriteFile(path, originalCode, info.Mode())
 

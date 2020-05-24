@@ -18,16 +18,16 @@ func isInfected(path string, info os.FileInfo) (int, error) {
 
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		return VirusNotFound, err
+		return virusNotFound, err
 	}
 
-	fileMark := content[VirusMarkOffset:VirusMarkEndOffset]
+	fileMark := content[virusMarkOffset:virusMarkEndOffset]
 	if !bytes.Equal(virusMark, fileMark) {
 		// Not infected
-		return VirusNotFound, nil
+		return virusNotFound, nil
 	}
 
-	fileGeneration := int(content[VirusGenerationOffset])
+	fileGeneration := int(content[virusGenerationOffset])
 	fmt.Printf("Infected file found: %s, generation %d\n", path, fileGeneration)
 
 	return fileGeneration, nil
@@ -44,7 +44,7 @@ func find(root string) []string {
 			if err != nil {
 				return err
 			}
-			if gen != VirusNotFound {
+			if gen != virusNotFound {
 				infectedFiles = append(infectedFiles, path)
 			}
 		}
