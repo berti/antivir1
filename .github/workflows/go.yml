@@ -35,3 +35,21 @@ jobs:
 
     - name: Test
       run: go test -v .
+
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antivir1
+        path: antivir1
+
+    - name: Build Windows
+      env:
+        GOOS: windows
+        GOARCH: amd64
+      run: go build -v .
+
+    - name: Upload Windows
+      uses: actions/upload-artifact@v2
+      with:
+        name: antivir1.exe
+        path: antivir1.exe
