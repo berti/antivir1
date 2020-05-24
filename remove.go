@@ -34,13 +34,13 @@ func remove(files []string) {
 	for _, file := range files {
 		fileInfo, err := os.Lstat(file)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error while getting file info: %s", file)
+			fmt.Fprintf(os.Stderr, "Error while getting file info: %s\n", file)
 			continue
 		}
 
 		err = removeVirus(file, fileInfo)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error while removing virus: %s", file)
+			fmt.Fprintf(os.Stderr, "Error while removing virus: %s\n", file)
 			continue
 		}
 	}
