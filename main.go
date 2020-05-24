@@ -58,7 +58,7 @@ func removeVirus(path string, info os.FileInfo) error {
 	originalCode := content[offset:]
 	ioutil.WriteFile(path, originalCode, info.Mode())
 
-	fmt.Println("Virus removed")
+	fmt.Printf("Virus removed: %s\n", path)
 
 	return nil
 }
