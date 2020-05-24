@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,10 +15,18 @@ func isComFile(path string, info os.FileInfo) bool {
 func isInfected(path string, info os.FileInfo) (int, error) {
 	virusMark := []byte{0x49, 0x56}
 
-	content, err := ioutil.ReadFile(path)
+	file, err := os.Open(path)
 	if err != nil {
 		return virusNotFound, err
 	}
+
+	content := make([]byte, virusGenerationOffset+1)
+	_, err = file.Read(content)
+	if err != nil {
+		return virusNotFound, err
+	}
+
+	file.Close()
 
 	fileMark := content[virusMarkOffset:virusMarkEndOffset]
 	if !bytes.Equal(virusMark, fileMark) {
